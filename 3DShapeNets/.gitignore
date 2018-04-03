@@ -1,0 +1,25 @@
+# parameter tuning files
+run_pretrain30.m
+run_pretrain.m
+run_finetuning.m
+resume30_l1.m
+resume30_l2.m
+resume30_l3.m
+resume30_l5.m
+resume30_l6.m
+resume30_l4.m
+resume48_l1.m
+resume48_l2.m
+resume48_l3.m
+resume48_l4.m
+resume48_l5.m
+resume48_l6.m
+
+# Compiled MATLAB
+*.mex*
+
+# Saved models
+*.mat
+
+# log files
+*.log*
