@@ -11,21 +11,33 @@ Code for visulization of objects.
 | ------------- | ------------ |
 | visualize.py   |visualize object represented as voxels using vtk  |
 
+```
+python3 visualize.py chair_demo.mat -u 0.9 -t 0.1 -i 1 -mc 2
+```
 
 #### /src:  
 Code for model training and testing. 
 
 | File          | Description  |
 | ------------- | ------------ |
-| 3dgan_mit_biasfree.py|3d-GAN model training and testing file                               |
-| dataIO.py            |data input output                                                    |
+| train.py|3d-GAN model training and testing file       |
+| dataIO.py            |data input output               |
+
+To train the model
+```
+python3 train.py 0 <path_to_model_checkpoint>
+```
+To generate chairs
+```
+python3 train.py 1 <path_to_trained_model>
+```
 
 #### /
 
 | File          | Description  |
 | ------------- | ------------ |
 | chair_demo.mat|a mat file of chair object generated from the trained 3dgan model's generator |
-| test.py.      |Transform .mat file into voxels for visualization input|
+| test.py       |Transform .mat file into voxels for visualization input|
 
 
 ## References:
