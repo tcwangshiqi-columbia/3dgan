@@ -8,6 +8,7 @@ def read_tensor(filename, varname='voxels'):
     """ return a 4D matrix, with dimensions point, x, y, z """
     assert(filename[-4:] == '.mat')
     mats = loadmat(filename)
+    print mats["voxels"].shape
     if varname not in mats:
         print (".mat file only has these matrices:")
         for var in mats: 
