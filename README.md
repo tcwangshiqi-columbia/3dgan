@@ -1,7 +1,7 @@
 # 3dgan
 
 ## Data:
-Training data in /3DShapeNets/volumetric_data/
+Download the training data from the 3D Shapenet [website](http://3dshapenets.cs.princeton.edu/3DShapeNetsCode.zip "")
 
 ## Files:
 #### /python:  
