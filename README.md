@@ -4,22 +4,22 @@
 Training data in /3DShapeNets/volumetric_data/
 
 ## Files:
-#### /python: 
-Code for visulization of objects. 
+#### /python:  
+Code for visulization of objects.  
 | File          | Description  |
 | ------------- | ------------ |
 | visualize.py   |visualize object represented as voxels using vtk  |
 
 
-#### /src: 
-Code for model training and testing. 
+#### /src:  
+Code for model training and testing.  
 | File          | Description  |
 | ------------- | ------------ |
 | 3dgan_mit_biasfree.py|3d-GAN model training and testing file                               |
 | dataIO.py            |data input output                                                    |
 
-#### /
-| File          | Description  |
+#### /. 
+| File          | Description  |
 | ------------- | ------------ |
 | chair_demo.mat|a mat file of chair object generated from the trained 3dgan model's generator |
 | test.py.      |Transform .mat file into voxels for visualization input|
