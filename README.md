@@ -4,10 +4,10 @@
 Training data in /3DShapeNets/volumetric_data/
 
 ## Files:
-| File          | Are           | Description  |
-| ------------- |:-------------:| ------------:|
-| chair_demo.mat|right-aligned | a mat file of chair object generated from a trained 3dgan model's generator (input for visualization) |
-| test.py.     |right-aligned    |   |
+| File          | Description  |
+| ------------- | ------------ |
+| chair_demo.mat|a mat file of chair object generated from a trained 3dgan model's generator (input for visualization) |
+| test.py.     |  |
 
 /python: code for visulization of objects
 /src: code for model training and testing
