@@ -12,7 +12,7 @@ Code for visulization of objects.
 | visualize.py   |visualize object represented as voxels using vtk  |
 
 ```
-python3 visualize.py chair_demo.mat -u 0.9 -t 0.1 -i 1 -mc 2
+python3 visualize.py new_chair.mat -u 0.9 -t 0.1 -i 1 -mc 2
 ```
 
 #### /src:  
@@ -37,7 +37,7 @@ python3 train.py 1 <path_to_trained_model>
 | File          | Description  |
 | ------------- | ------------ |
 | chair_demo.mat|a mat file of chair object generated from the trained 3dgan model's generator |
-| test.py       |Transform .mat file into voxels for visualization input|
+| test.py       |Transform .mat file into voxels for visualization input (new_chair.mat)|
 
 
 ## References:
