@@ -1,5 +1,19 @@
 # 3dgan
+
+## Data:
 Training data in /3DShapeNets/volumetric_data/
+
+## Files:
+/python: code for visulization of objects
+/src: code for model training and testing
+3dgan_mit_biasfree1.py:	3dgan model 
+dataIO.py:	data input output and plotting utilities.
+utils.py:	tensorflow utils like leaky_relu and batch_norm layer.
+
+chair_demo.mat: a mat file of chair object generated from a trained 3dgan model's generator (input for visualization)
+test.py: 
+
+
 
 
 ## References:
