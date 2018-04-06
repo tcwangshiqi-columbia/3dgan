@@ -4,17 +4,34 @@
 Training data in /3DShapeNets/volumetric_data/
 
 ## Files:
+### /python: 
+code for visulization of objects
 | File          | Description  |
 | ------------- | ------------ |
 | chair_demo.mat|a mat file of chair object generated from a trained 3dgan model's generator (input for visualization) |
-| test.py.     |  |
+| visualize.py   |  |
 
-/python: code for visulization of objects
-/src: code for model training and testing
-3dgan_mit_biasfree1.py:	3dgan model 
-dataIO.py:	data input output and plotting utilities.
-utils.py:	tensorflow utils like leaky_relu and batch_norm layer.
 
+util.py	visualize	2 hours ago
+util.pyc	visualize	2 hours ago
+util_36.py	model	5 days ago
+util_vtk.py	model	5 days ago
+util_vtk.pyc	visualize	2 hours ago
+visualize.py	model	5 days ago
+
+
+### /src: 
+code for model training and testing
+| File          | Description  |
+| ------------- | ------------ |
+| 3dgan_mit_biasfree.py|3d-GAN model training and testing file                               |
+| dataIO.py            |data input output                                                    |
+| utils.py             |tensorflow utils like leaky_relu and batch_norm layer                |
+
+| File          | Description  |
+| ------------- | ------------ |
+| chair_demo.mat|a mat file of chair object generated from the trained 3dgan model's generator |
+| test.py.      |Transform .mat file into voxels for visualization input|
 
 
 
