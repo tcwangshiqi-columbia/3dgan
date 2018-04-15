@@ -6,7 +6,7 @@ import visdom
 import numpy as np
 import tensorflow as tf
 import dataIO as d
-
+import scipy.io as io
 from tqdm import *
 from utils import *
 
@@ -215,18 +215,20 @@ def trainGAN(is_dummy=False, checkpoint=None):
             print('Generator Training ', "epoch: ",epoch,', d_loss:',discriminator_loss,'g_loss:',generator_loss, "d_acc: ", d_accuracy)
 
             # output generated chairs
-            if epoch % 1 == 0:
+            if epoch % 100 == 0:
                 g_objects = sess.run(net_g_test,feed_dict={z_vector:z_sample})
                 if not os.path.exists(train_sample_directory):
                     os.makedirs(train_sample_directory)
                 g_objects.dump(train_sample_directory+'/biasfree_'+str(epoch))
                 id_ch = np.random.randint(0, batch_size, 4)
+                '''
                 for i in range(4):
                     if g_objects[id_ch[i]].max() > 0.5: d.plotVoxelVisdom(np.squeeze(g_objects[id_ch[i]]>0.5), vis, '_'.join(map(str,[epoch,i])))          
-            if epoch % 1 == 0:
+                '''
+            if epoch % 500 == 0:
                 if not os.path.exists(model_directory):
                     os.makedirs(model_directory)      
-                saver.save(sess, save_path = model_directory + '/biasfree_' + str(epoch) + '.cptk')
+                saver.save(sess, save_path = model_directory + '/biasfree_' + str(epoch+5000) + '.cptk')
 
 
 def testGAN(trained_model_path=None, n_batches=40):
@@ -234,7 +236,7 @@ def testGAN(trained_model_path=None, n_batches=40):
     weights = initialiseWeights()
 
     z_vector = tf.placeholder(shape=[batch_size,z_size],dtype=tf.float32) 
-    net_g_test = generator(z_vector, phase_train=True, reuse=True)
+    net_g_test = generator(z_vector, phase_train=True, reuse=False)
 
     vis = visdom.Visdom()
 
@@ -247,14 +249,22 @@ def testGAN(trained_model_path=None, n_batches=40):
 
         # output generated chairs
         for i in range(n_batches):
-            next_sigma = float(raw_input())
+            next_sigma = float(1)
             z_sample = np.random.normal(0, next_sigma, size=[batch_size, z_size]).astype(np.float32)
             g_objects = sess.run(net_g_test,feed_dict={z_vector:z_sample})
+            g_objects = np.transpose(g_objects, (0,4,1,2,3))
+            print (g_objects.shape)
+            # g_objects = g_objects/np.linalg.norm(g_objects,axis = 4)
+            io.savemat("image", {"voxels": g_objects})
             id_ch = np.random.randint(0, batch_size, 4)
+            '''
             for i in range(4):
                 print(g_objects[id_ch[i]].max(), g_objects[id_ch[i]].min(), g_objects[id_ch[i]].shape)
                 if g_objects[id_ch[i]].max() > 0.5:
-                    d.plotVoxelVisdom(np.squeeze(g_objects[id_ch[i]]>0.5), vis, '_'.join(map(str,[i])))
+                    image = g_objects[id_ch[i]]>0.5
+                    print (image.shape)
+                    io.savemat("image"+str(i), {"voxels": image.reshape(1,1,64,64,64)})
+            '''
 
 if __name__ == '__main__':
     test = bool(int(sys.argv[1]))
