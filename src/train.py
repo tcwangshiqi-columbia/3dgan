@@ -231,7 +231,7 @@ def trainGAN(is_dummy=False, checkpoint=None):
                 saver.save(sess, save_path = model_directory + '/biasfree_' + str(epoch+5000) + '.cptk')
 
 
-def testGAN(trained_model_path=None, n_batches=40):
+def testGAN(trained_model_path=None, n_batches=1):
 
     weights = initialiseWeights()
 
@@ -243,16 +243,20 @@ def testGAN(trained_model_path=None, n_batches=40):
     sess = tf.Session()
     saver = tf.train.Saver()
     
+    d_output_x, d_no_sigmoid_output_x = discriminator(net_g_test, phase_train=True, reuse=False)
     with tf.Session() as sess:
         sess.run(tf.global_variables_initializer())
         saver.restore(sess, trained_model_path) 
 
         # output generated chairs
         for i in range(n_batches):
-            next_sigma = float(1)
+            next_sigma = float(5)
             z_sample = np.random.normal(0, next_sigma, size=[batch_size, z_size]).astype(np.float32)
             g_objects = sess.run(net_g_test,feed_dict={z_vector:z_sample})
+            
+            x = sess.run(d_output_x, feed_dict={net_g_test:g_objects})
             g_objects = np.transpose(g_objects, (0,4,1,2,3))
+            print (x)
             print (g_objects.shape)
             # g_objects = g_objects/np.linalg.norm(g_objects,axis = 4)
             io.savemat("image", {"voxels": g_objects})
