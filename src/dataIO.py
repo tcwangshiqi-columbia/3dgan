@@ -48,7 +48,7 @@ def plotFromVoxels(voxels):
     plt.show()
 
 def getVFByMarchingCubes(voxels, threshold=0.5):
-    v, f =  sk.marching_cubes(voxels, level=threshold)
+    v, f, _, _=  sk.marching_cubes(voxels, level=threshold)
     return v, f
 
 def plotMeshFromVoxels(voxels, threshold=0.5):
@@ -86,13 +86,14 @@ def getVoxelFromMat(path, cube_len=64):
 def getAll(obj='airplane',train=True, is_local=False, cube_len=64, obj_ratio=1.0):
     fileList = []
     volumeBatch = []
-    for obj in ['chair', 'desk']:
+    for obj in ['desk','chair']:
         objPath = SERVER_PATH + obj + '/30/'
         if is_local:
             objPath = LOCAL_PATH + obj + '/30/'
         objPath += 'train/' if train else 'test/'
         fileList1 = [f for f in os.listdir(objPath) if f.endswith('.mat')] 
-        fileList = fileList1[0:int(obj_ratio*len(fileList1))]
+        #fileList = fileList1[0:int(obj_ratio*len(fileList1))]
+        fileList = fileList1[0:500]
         volumeBatch.extend([getVoxelFromMat(objPath + f, cube_len) for f in fileList])
     volumeBatch = np.asarray(volumeBatch, dtype = np.bool)
     print (volumeBatch.shape)
