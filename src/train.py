@@ -14,17 +14,16 @@ from utils import *
 Global Parameters
 '''
 n_epochs   = 10000
-batch_size = 32
-g_lr       = 0.0025
-d_lr       = 0.00001
+batch_size = 50
+g_lr       = 0.00025
+d_lr       = 0.000015
 beta       = 0.5
 d_thresh   = 0.8
 z_size     = 200
 leak_value = 0.2
 cube_len   = 64
 obj_ratio  = 0.7
-obj        = 'chair' 
-
+obj        = 'desk'
 train_sample_directory = './train_sample/'
 model_directory = './models/'
 is_local = False
@@ -204,9 +203,9 @@ def trainGAN(is_dummy=False, checkpoint=None):
 
             summary_d, discriminator_loss = sess.run([d_summary_merge,d_loss],feed_dict={z_vector:z, x_vector:x})
             summary_g, generator_loss = sess.run([summary_g_loss,g_loss],feed_dict={z_vector:z})  
-            d_accuracy, n_x, n_z = sess.run([d_acc, n_p_x, n_p_z],feed_dict={z_vector:z, x_vector:x})
-            print(n_x, n_z)
-
+            d_accuracy, n_x, n_z, d_x,d_z = sess.run([d_acc, n_p_x, n_p_z,d_output_x,d_output_z],feed_dict={z_vector:z, x_vector:x})
+            #print("nx_nz:",n_x, n_z, "\nd_x:",d_x.reshape(batch_size), "d_z:",d_z.reshape(batch_size))
+            print ("nx",n_x,"nz",n_z)
             if d_accuracy < d_thresh:
                 sess.run([optimizer_op_d],feed_dict={z_vector:z, x_vector:x})
                 print('Discriminator Training ', "epoch: ",epoch,', d_loss:',discriminator_loss,'g_loss:',generator_loss, "d_acc: ", d_accuracy)
@@ -221,14 +220,13 @@ def trainGAN(is_dummy=False, checkpoint=None):
                     os.makedirs(train_sample_directory)
                 g_objects.dump(train_sample_directory+'/biasfree_'+str(epoch))
                 id_ch = np.random.randint(0, batch_size, 4)
-                '''
                 for i in range(4):
+                    print(g_objects[id_ch[i]].max())
                     if g_objects[id_ch[i]].max() > 0.5: d.plotVoxelVisdom(np.squeeze(g_objects[id_ch[i]]>0.5), vis, '_'.join(map(str,[epoch,i])))          
-                '''
-            if epoch % 500 == 0:
+            if epoch % 200 == 0:
                 if not os.path.exists(model_directory):
                     os.makedirs(model_directory)      
-                saver.save(sess, save_path = model_directory + '/biasfree_' + str(epoch+5000) + '.cptk')
+                saver.save(sess, save_path = model_directory + '/biasfree_' + str(epoch) + '.cptk')
 
 
 def testGAN(trained_model_path=None, n_batches=1):
@@ -250,25 +248,36 @@ def testGAN(trained_model_path=None, n_batches=1):
 
         # output generated chairs
         for i in range(n_batches):
-            next_sigma = float(5)
+            inter_size = 50
+            next_sigma = float(0.33)
             z_sample = np.random.normal(0, next_sigma, size=[batch_size, z_size]).astype(np.float32)
-            g_objects = sess.run(net_g_test,feed_dict={z_vector:z_sample})
+            new_sample = np.zeros((inter_size,z_size))
+            new_sample[0] = z_sample[0]
+            new_sample[inter_size-1] = z_sample[batch_size-1]
+            diff = (new_sample[0]-new_sample[inter_size-1])/float(inter_size)
+            for k in range(1,inter_size):
+                new_sample[k] = new_sample[k-1]+diff
+                #new_sample[k,k] = z_sample[batch_size-1,k]
+             
+                   
+            g_objects = sess.run(net_g_test,feed_dict={z_vector:new_sample})
             
-            x = sess.run(d_output_x, feed_dict={net_g_test:g_objects})
-            g_objects = np.transpose(g_objects, (0,4,1,2,3))
-            print (x)
-            print (g_objects.shape)
+            #x = sess.run(d_output_x, feed_dict={net_g_test:g_objects})
+            #g_objects = np.transpose(g_objects, (0,4,1,2,3))
+            #print (x)
+            #print (g_objects.shape)
             # g_objects = g_objects/np.linalg.norm(g_objects,axis = 4)
-            io.savemat("image", {"voxels": g_objects})
-            id_ch = np.random.randint(0, batch_size, 4)
-            '''
+            #io.savemat("image", {"voxels": g_objects})
+            #id_ch = np.random.randint(0, batch_size, 4)
+            g_objects.dump(train_sample_directory+'/interpolation_new')
             for i in range(4):
-                print(g_objects[id_ch[i]].max(), g_objects[id_ch[i]].min(), g_objects[id_ch[i]].shape)
-                if g_objects[id_ch[i]].max() > 0.5:
-                    image = g_objects[id_ch[i]]>0.5
-                    print (image.shape)
-                    io.savemat("image"+str(i), {"voxels": image.reshape(1,1,64,64,64)})
-            '''
+                #print(g_objects[id_ch[i]].max(), g_objects[id_ch[i]].min(), g_objects[id_ch[i]].shape)
+                if g_objects[66*i].max() > 0.5:
+                    #iimage = g_objects[id_ch[i]]>0.5
+                    #print (image.shape)
+                    #io.savemat("image"+str(i), {"voxels": image.reshape(1,1,64,64,64)})
+                    d.plotVoxelVisdom(np.squeeze(g_objects[66*i]>0.5), vis, '_'.join(map(str,[66*i])))
+
 
 if __name__ == '__main__':
     test = bool(int(sys.argv[1]))

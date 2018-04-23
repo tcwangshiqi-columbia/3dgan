@@ -1,10 +1,27 @@
 import numpy as np
 import scipy.io as io
 from scipy.io import loadmat
+import matplotlib.pyplot as plt
 
-x = np.random.rand(1,64,64,64)
+np.set_printoptions(threshold=np.nan)
 
-io.savemat("test",{"voxels":x})
+#x = np.random.rand(1,64,64,64)
 
-mats = loadmat("chair_demo.mat")
-io.savemat("new_chair",{"voxels":mats["voxels"][4:5]})
+#io.savemat("test",{"voxels":x})
+
+mats = np.load("src/interpolation2")
+print mats.shape
+
+batch_size = 200
+mats = mats>0.5
+d = []
+for i in range(100,120):
+	d.append(np.sum(np.absolute(mats[i]-mats[100])))
+	#print np.sum(np.absolute(mats[i]-mats[100]))
+
+plt.plot(range(20),d)
+plt.show()
+#mats = loadmat("chair_demo.mat")
+#print mats['voxels'].shape
+#mats = np.transpose(mats, (0,4,1,2,3))
+#io.savemat("new_chair",{"voxels":mats[0:1]})
