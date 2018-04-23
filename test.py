@@ -13,7 +13,7 @@ mats = np.load("src/interpolation2")
 print mats.shape
 
 batch_size = 200
-mats = mats>0.5
+#mats = mats>0.5
 d = []
 for i in range(100,120):
 	d.append(np.sum(np.absolute(mats[i]-mats[100])))
