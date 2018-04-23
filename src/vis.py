@@ -16,10 +16,12 @@ def plotVoxelVisdom(voxels, visdom, title):
     visdom.mesh(X=v, Y=f, opts=dict(opacity=0.5, title=title))
 
 #mats = loadmat("../../../3DShapeNets/volumetric_data/desk/30/train/desk_000000001_5.mat")
-mats = loadmat("image_chair_desk2.mat")
-print (type(mats['voxels']),mats['voxels'].shape)
+#mats = loadmat("image_chair_desk2.mat")
+mats = np.load("interpolation2")
+#print (type(mats['voxels']),mats['voxels'].shape)
 #plotVoxelVisdom(np.squeeze(mats['instance']>0.5), vis, 'chair')
-plotVoxelVisdom(np.squeeze(mats['voxels'][0]>0.5), vis, 'image_chair_desk2.mat')
+for i in range(100,120):
+	plotVoxelVisdom(np.squeeze(mats[i]>0.5), vis, 'image'+str(i))
 
 
 #v, f = getVFByMarchingCubes(mats['instance'])

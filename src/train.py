@@ -14,7 +14,7 @@ from utils import *
 Global Parameters
 '''
 n_epochs   = 10000
-batch_size = 200
+batch_size = 50
 g_lr       = 0.00025
 d_lr       = 0.000015
 beta       = 0.5
@@ -248,14 +248,16 @@ def testGAN(trained_model_path=None, n_batches=1):
 
         # output generated chairs
         for i in range(n_batches):
+            inter_size = 50
             next_sigma = float(0.33)
             z_sample = np.random.normal(0, next_sigma, size=[batch_size, z_size]).astype(np.float32)
-            new_sample = np.zeros((200,z_size))
+            new_sample = np.zeros((inter_size,z_size))
             new_sample[0] = z_sample[0]
-            new_sample[199] = z_sample[batch_size-1]
-            for k in range(1,200):
-                new_sample[k] = new_sample[k-1]
-                new_sample[k,k] = z_sample[batch_size-1,k]
+            new_sample[inter_size-1] = z_sample[batch_size-1]
+            diff = (new_sample[0]-new_sample[inter_size-1])/float(inter_size)
+            for k in range(1,inter_size):
+                new_sample[k] = new_sample[k-1]+diff
+                #new_sample[k,k] = z_sample[batch_size-1,k]
              
                    
             g_objects = sess.run(net_g_test,feed_dict={z_vector:new_sample})
@@ -267,7 +269,7 @@ def testGAN(trained_model_path=None, n_batches=1):
             # g_objects = g_objects/np.linalg.norm(g_objects,axis = 4)
             #io.savemat("image", {"voxels": g_objects})
             #id_ch = np.random.randint(0, batch_size, 4)
-            g_objects.dump(train_sample_directory+'/interpolation4')
+            g_objects.dump(train_sample_directory+'/interpolation_new')
             for i in range(4):
                 #print(g_objects[id_ch[i]].max(), g_objects[id_ch[i]].min(), g_objects[id_ch[i]].shape)
                 if g_objects[66*i].max() > 0.5:
