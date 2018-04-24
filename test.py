@@ -9,17 +9,17 @@ np.set_printoptions(threshold=np.nan)
 
 #io.savemat("test",{"voxels":x})
 
-mats = np.load("src/interpolation3")
+mats = np.load("src/interpolation_new2")
 print mats.shape
 
-batch_size = 200
+batch_size = 64
 #mats = mats>0.5
 d = []
-for i in range(0,200, 10):
+for i in range(64):
 	d.append(np.sum(np.absolute(mats[i]-mats[0])))
 	#print np.sum(np.absolute(mats[i]-mats[100]))
 
-plt.plot(range(20),d)
+plt.plot(range(64),d)
 plt.show()
 #mats = loadmat("chair_demo.mat")
 #print mats['voxels'].shape

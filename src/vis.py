@@ -17,10 +17,11 @@ def plotVoxelVisdom(voxels, visdom, title):
 
 #mats = loadmat("../../../3DShapeNets/volumetric_data/desk/30/train/desk_000000001_5.mat")
 #mats = loadmat("image_chair_desk2.mat")
-mats = np.load("interpolation4")
+mats = np.load("interpolation_new1")
+print mats.shape
 #print (type(mats['voxels']),mats['voxels'].shape)
 #plotVoxelVisdom(np.squeeze(mats['instance']>0.5), vis, 'chair')
-for i in range(0,200,10):
+for i in range(0,63,3):
 	plotVoxelVisdom(np.squeeze(mats[i]>0.5), vis, 'image'+str(i))
 
 #plotVoxelVisdom(np.squeeze(mats[0]>0.5), vis, 'image'+str(0))
